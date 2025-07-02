@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scientific Calculator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to top right, #0f2027, #203a43, #2c5364);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .calculator {
+      width: 95%;
+      max-width: 1000px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+      padding: 250px;
+      margin-top: 500px;
+    }
+
+    .display {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 2rem;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: right;
+      overflow-x: auto;
+    }
+
+    .copy-btn {
+      background: #14b8a6;
+      color: #fff;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      float: right;
+      margin-top: 10px;
+    }
+
+    .keys {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .key {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-size: 1.2rem;
+      padding: 18px;
+      border-radius: 14px;
+      text-align: center;
+      user-select: none;
+      cursor: pointer;
+      transition: 0.2s ease-in-out;
+    }
+
+    .key:hover {
+      background-color: #0ef;
+      color: #000;
+      transform: scale(1.05);
+    }
+
+    .key.operator {
+      color: #facc15;
+    }
+
+    .key.equal {
+      background-color: #10b981;
+    }
+
+    .key.equal:hover {
+      background-color: #22c55e;
+    }
+
+    .key.delete {
+      background-color: #ef4444;
+      color: white;
+    }
+
+    footer {
+      color: #ccc;
+      font-size: 0.9rem;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .key {
+        font-size: 1rem;
+        padding: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calculator">
+    <div class="display" id="result">0</div>
+    <button class="copy-btn" onclick="playClick(); copyResult()">Copy</button>
+
+    <div class="keys">
+      <!-- Row 1 -->
+      <div class="key" onclick="playClick(); append('7')">7</div>
+      <div class="key" onclick="playClick(); append('8')">8</div>
+      <div class="key" onclick="playClick(); append('9')">9</div>
+      <div class="key operator" onclick="playClick(); append('/')">÷</div>
+      <div class="key operator" onclick="playClick(); append('sqrt(')">√</div>
+
+      <!-- Row 2 -->
+      <div class="key" onclick="playClick(); append('4')">4</div>
+      <div class="key" onclick="playClick(); append('5')">5</div>
+      <div class="key" onclick="playClick(); append('6')">6</div>
+      <div class="key operator" onclick="playClick(); append('*')">×</div>
+      <div class="key operator" onclick="playClick(); append('log(')">log</div>
+
+      <!-- Row 3 -->
+      <div class="key" onclick="playClick(); append('1')">1</div>
+      <div class="key" onclick="playClick(); append('2')">2</div>
+      <div class="key" onclick="playClick(); append('3')">3</div>
+      <div class="key operator" onclick="playClick(); append('-')">−</div>
+      <div class="key operator" onclick="playClick(); append('sin(')">sin</div>
+
+      <!-- Row 4 -->
+      <div class="key" onclick="playClick(); append('0')">0</div>
+      <div class="key" onclick="playClick(); append('.')">.</div>
+      <div class="key" onclick="playClick(); clearDisplay()">C</div>
+      <div class="key delete" onclick="playClick(); deleteLast()">⌫</div>
+      <div class="key operator" onclick="playClick(); append('+')">+</div>
+
+      <!-- Row 5 -->
+      <div class="key operator" onclick="playClick(); append('cos(')">cos</div>
+      <div class="key operator" onclick="playClick(); append('tan(')">tan</div>
+      <div class="key" onclick="playClick(); append('(')">(</div>
+      <div class="key" onclick="playClick(); append(')')">)</div>
+      <div class="key operator" onclick="playClick(); append('^')">^</div>
+
+      <!-- Row 6 -->
+      <div class="key equal" style="grid-column: span 5;" onclick="playClick(); calculate()">=</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>© 2025 All Rights Reserved</footer>
+
+  <!-- Click sound -->
+  <audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
+
+  <script>
+    const result = document.getElementById('result');
+    const clickSound = document.getElementById('clickSound');
+
+    function playClick() {
+      clickSound.currentTime = 0;
+      clickSound.play();
+    }
+
+    function append(val) {
+      if (result.textContent === '0') {
+        result.textContent = val;
+      } else {
+        result.textContent += val;
+      }
+    }
+
+    function clearDisplay() {
+      result.textContent = '0';
+    }
+
+    function deleteLast() {
+      if (result.textContent.length > 1) {
+        result.textContent = result.textContent.slice(0, -1);
+      } else {
+        result.textContent = '0';
+      }
+    }
+
+    function calculate() {
+      try {
+        let expr = result.textContent
+          .replace(/√/g, 'Math.sqrt')
+          .replace(/log/g, 'Math.log10')
+          .replace(/sin/g, 'Math.sin')
+          .replace(/cos/g, 'Math.cos')
+          .replace(/tan/g, 'Math.tan')
+          .replace(/\^/g, '**');
+
+        let answer = eval(expr);
+        result.textContent = answer;
+      } catch (err) {
+        result.textContent = 'Error';
+      }
+    }
+
+    function copyResult() {
+      navigator.clipboard.writeText(result.textContent)
+        .then(() => {
+          alert("Result copied!");
+        });
+    }
+  </script>
+</body>
+</html>
